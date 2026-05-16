@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Safe Scroll</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow"><span>Gemma 4 Good Hackathon</span></p>
+        <h1>Safe Scroll</h1>
+        <p class="subtitle">Parent-guided page scanning powered by local Gemma 4 E2B.</p>
+      </div>
+      <div class="notice">
+        <strong>Parent configuration console.</strong>
+        For parents configuring Safe Scroll for their kids. Password protection is planned after the Gemma 4 Good Hackathon build.
+      </div>
+    </header>
+
+    <section class="workspace-grid">
+      <div class="work-left">
+        <section class="model-panel">
+          <div class="model-topline">
+            <h2 class="model-heading"><span>Model: Gemma 4 E2B ONNX</span></h2>
+            <div class="status-chip">
+              <span class="dot" id="status-dot"></span>
+              <span id="status-text">Checking…</span>
+              <span id="status-source" class="badge"></span>
+            </div>
+          </div>
+          <div class="model-bottomline">
+            <div class="progress-wrap">
+              <div class="progress-bar"><div id="progress-fill"></div></div>
+              <div class="progress-meta">
+                <span id="progress-percent">0%</span>
+                <span id="progress-file"></span>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button id="btn-load" class="primary">Load model</button>
+              <button id="btn-unload" class="secondary icon-button" aria-label="Reset model" title="Reset model">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                  <path d="M3 4v6h6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="controls-grid">
+          <div class="panel prompt-panel">
+            <div class="panel-title">
+              <h2>Moderation prompt</h2>
+              <div class="prompt-tools">
+                <span id="save-state" class="muted">Saved.</span>
+                <button id="btn-reset-prompt" class="secondary icon-button" aria-label="Reset moderation prompt" title="Reset prompt">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                    <path d="M3 4v6h6"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <textarea id="prompt" rows="10" spellcheck="false"></textarea>
+          </div>
+
+          <div class="panel settings-panel">
+            <h2>Settings</h2>
+            <label class="switch-row">
+              <span>Extension</span>
+              <span class="power-switch">
+                <span>Off</span>
+                <input type="checkbox" id="enabled" aria-label="Enable extension" />
+                <span>On</span>
+              </span>
+            </label>
+            <label class="row">
+              <span>Screening mode</span>
+              <span class="mode-switch">
+                <span>Balanced</span>
+                <input type="checkbox" id="screeningMode" aria-label="Use strict screening" />
+                <span>Strict</span>
+              </span>
+              <small id="screening-note" class="mode-note">Blurred elements can be viewed anyway in balanced mode.</small>
+            </label>
+            <label class="row">
+              <span>Process mode</span>
+              <select id="processMode">
+                <option value="sequence">sequence</option>
+                <option value="parallel_fold">above fold first</option>
+                <option value="parallel">parallel</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Quantization</span>
+              <select id="dtype">
+                <option value="q4">q4</option>
+                <option value="q4f16">q4f16</option>
+                <option value="q8">q8</option>
+                <option value="fp16">fp16</option>
+              </select>
+            </label>
+            <div class="toggle-grid">
+              <label class="toggle">
+                <input type="checkbox" id="ct-text" />
+                <span>Text</span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="ct-image" />
+                <span>Images</span>
+              </label>
+              <label class="toggle toggle-wide">
+                <input type="checkbox" id="debug" />
+                <span>Console logs</span>
+              </label>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="stats-rail">
+        <section class="dashboard">
+          <div class="metric primary-metric">
+            <span class="metric-label">Elements processed</span>
+            <strong id="stat-total">0</strong>
+            <small><span id="stat-text">0</span> text / <span id="stat-image">0</span> image</small>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Sensitive found</span>
+            <strong id="stat-sensitive">0</strong>
+            <small><span id="stat-blur">0</span> blur / <span id="stat-highlight">0</span> highlight</small>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Avg throughput</span>
+            <strong><span id="stat-tps">0.0</span></strong>
+            <small>tokens per second</small>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Avg inference</span>
+            <strong><span id="stat-inference">0</span>ms</strong>
+            <small><span id="stat-fresh">0</span> model calls</small>
+          </div>
+        </section>
+
+        <section class="chart-panel">
+          <div class="panel-title">
+            <h2>Live verdicts</h2>
+          </div>
+          <div class="pie-wrap" aria-label="Live verdict distribution">
+            <svg class="pie-chart" viewBox="0 0 150 150" role="img" aria-labelledby="pie-title">
+              <title id="pie-title">Clear, blur, and highlight verdict counts</title>
+              <circle class="pie-empty" cx="75" cy="75" r="63"></circle>
+              <path id="pie-clear" class="pie-slice clear"></path>
+              <path id="pie-blur" class="pie-slice blur"></path>
+              <path id="pie-highlight" class="pie-slice highlight"></path>
+            </svg>
+            <div class="pie-legend">
+              <span><i class="legend-dot clear"></i>Clear <b id="stat-clear">0</b></span>
+              <span><i class="legend-dot blur"></i>Blur <b id="stat-blur-2">0</b></span>
+              <span><i class="legend-dot highlight"></i>Highlight <b id="stat-highlight-2">0</b></span>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

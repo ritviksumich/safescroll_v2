@@ -1,0 +1,66 @@
+/* Safe Scroll action styles. The data-ss-* attributes are set by safescroll.js
+   on any element flagged by the Gemma classifier. */
+
+[data-ss-action="blur"] {
+  filter: blur(14px) saturate(0.6);
+  cursor: help;
+  transition: filter 0.18s ease-out;
+}
+
+[data-ss-action="blur"][data-ss-revealed="true"] {
+  filter: blur(0);
+  cursor: auto;
+}
+
+[data-ss-action="highlight"] {
+  border-radius: 4px;
+  cursor: help;
+}
+
+/* Fixed overlay layer injected by safescroll.js. This avoids page stacking
+   contexts and pseudo-element limitations on image/picture targets. */
+#ss-overlay-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+}
+
+.ss-overlay-box {
+  position: fixed;
+  border-radius: 6px;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.ss-overlay-box[data-ss-overlay-action="blur"] {
+  border: 2px dashed rgba(220, 38, 38, 0.9);
+  box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.22);
+}
+
+.ss-overlay-box[data-ss-overlay-action="highlight"] {
+  border: 3px solid #f59e0b;
+  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.25), 0 8px 24px rgba(245, 158, 11, 0.22);
+}
+
+.ss-overlay-tooltip {
+  position: fixed;
+  z-index: 2147483647;
+  max-width: min(340px, calc(100vw - 20px));
+  background: #111827;
+  color: #f9fafb;
+  border: 2px solid #ffffff;
+  box-shadow: 4px 4px 0 #000000;
+  font: 700 12px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding: 8px 10px;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  overflow-wrap: anywhere;
+}
+
+.ss-overlay-tooltip[data-ss-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
