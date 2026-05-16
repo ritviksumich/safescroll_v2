@@ -42,4 +42,4 @@ Safe Scroll does not use user data for advertising, profiling, creditworthiness,
 
 For privacy questions, contact:
 
-sh.ritvik@gmail.com
+sh.ritvik@gmail.com 
