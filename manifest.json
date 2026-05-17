@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Safe Scroll",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Prompt-configurable on-device page content rating using Gemma 4 E2B (ONNX, WebGPU).",
   "permissions": ["storage", "scripting", "offscreen"],
   "content_security_policy": {
